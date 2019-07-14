@@ -12,7 +12,7 @@ merklizer:
 
 safe-build: 
 	cd nodejs-docker \
-	 &&	docker build . -t nodejs \
-	 && cd .. \
-	 && ./safe-build.sh 2>&1
+  &&  docker build . -t nodejs \
+  && cd .. \
+  && ./safe-build.sh merklizer.xyz 2>&1
 

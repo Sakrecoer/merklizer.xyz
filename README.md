@@ -29,11 +29,15 @@ See it in action on https://merklizer.xyz
 
 You can build the static webpages in a docker container with
 ```
-make
+make  # NB: the remote repository will be used for the build
 ```
 Then you can bind or copy the dist directory somewhere, on linux it is located at
 ```
 /var/lib/docker/volumes/merklizer.xyz/_data/dist
+```
+On the other hand you can build the static webpages on your host from the local repository, at your risks and perils:
+```
+make unsafe-build
 ```
 
 ## Clean
@@ -49,14 +53,36 @@ docker volume rm merklizer.xyz
 Check the docker documentation for more.
 
 ## Work in the container (git, gulp...)
-Restart the container with eg
+### Restart the container with eg
 ```
-docker start merklizer.xyz -ai 
+docker start merklizer.xyz
+```
+### Run a shell in the container with eg
+```
+docker exec -it merklizer.xyz /bin/bash -l
+```
+or eg
+```
+docker exec -it merklizer.xyz /bin/bash -l -e 'screen -s /bin/bash'
 ```
 
-### eg Run and test with
+#### Update gh-pages
+eg after rebuilding the container, with: 
+```
+docker start merklizer.xyz -ai << EOF
+cd /home/nodejs/src/merklizer.xyz
+git config user.name "$(git config user.name)"
+git config user.email "$(git config user.email)"
+git add docs
+git commit docs -m "update gh-pages"
+git push origin master
+EOF
+```
+
+### Run and test web application with eg
 ```
 docker start merklizer.xyz -ai << EOF
 cd /home/nodejs/src/merklizer.xyz
 gulp
+EOF
 ```
